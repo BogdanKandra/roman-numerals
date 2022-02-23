@@ -75,6 +75,12 @@ class TestRoman:
         assert r.decimal == 2021
         assert r.roman == 'MMXXI'
 
+        representation = 'xiii'
+        r = Roman(representation)
+
+        assert r.decimal == 13
+        assert r.roman == 'XIII'
+
     def test_valid_representation_number(self):
         """ Tests that Roman numerals are successfully created from a valid
         representation number and the conversion to Roman is correct """
