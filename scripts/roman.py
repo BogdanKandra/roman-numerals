@@ -1,12 +1,25 @@
-from typing import Union
+from typing import Callable, Union
 from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
+
+
+def validated(fn):
+    """ Decorator which enables the validation of input for functions taking
+     roman numeral representations as a parameter (decimal or roman) """
+    def wrapper(representation: Union[str, int]):
+        validation_result = Roman.validate(representation)
+        if validation_result == 'OK':
+            return fn(representation)
+        else:
+            raise RomanNumeralValueError(validation_result)
+
+    return wrapper
 
 
 class Roman:
     """ Class which implements support for and arithmetic operations with Roman
     Numerals """
-    def __init__(self, representation: Union[str, int]='N'):
+    def __init__(self, representation: Union[str, int] = 'N'):
         """ The constructor first checks if the representation is a valid roman
         numeral representation, then converts the representation to get the
         other one and then sets the appropriate fields **roman** and **decimal**
@@ -17,7 +30,7 @@ class Roman:
         if validation_result == 'OK':
             # Convert it and set fields
             if isinstance(representation, str):
-                self.roman = representation
+                self.roman = representation.upper()
                 self.decimal = Roman.convert_to_decimal(representation)
             elif isinstance(representation, int):
                 self.roman = Roman.convert_to_roman(representation)
@@ -29,7 +42,8 @@ class Roman:
     def __repr__(self):
         """ Returns an information-rich string representation of the Roman
         numeral object. Typically used for debugging """
-        return 'Roman Numeral -> Roman representation: {self.roman}; decimal representation: {self.decimal}'.format(self=self)
+        representation = 'Roman Numeral -> Roman representation: {self.roman}; decimal representation: {self.decimal}'
+        return representation.format(self=self)
 
     def __str__(self):
         """ Represents the Roman numeral in a more informal way. If this
@@ -68,7 +82,7 @@ class Roman:
             return Roman(self.decimal + other)
         elif isinstance(other, str):
             return Roman(self.decimal + Roman(other).decimal)
-    
+
     def __radd__(self, other):
         """ Implements the right-sided addition for Roman numerals. Without
         this function, computing 100 + Roman("X") is not possible """
@@ -176,13 +190,14 @@ class Roman:
         integer representations, it is checked whether the representation is a
         non-negative number, no bigger than 3999 (the maximum Roman numeral) """
         if isinstance(representation, str):
+            representation = representation.upper()
             roman_characters = [r.name for r in RomanNumeral]
 
             # Check if only the required characters are present
             character_set_difference = set(representation).difference(set(roman_characters))
             if character_set_difference != set():
-                message = 'The string representation provided contains invalid characters: {}'.format(character_set_difference)
-                return message
+                message = 'The string representation provided contains invalid characters: {}'
+                return message.format(character_set_difference)
 
             # Make checks on each character from the representation
             for i, current in enumerate(representation):
@@ -191,16 +206,16 @@ class Roman:
 
                     # Check if current character is succeeded by a bigger character
                     if roman_characters.index(current) < roman_characters.index(successor) and \
-                        current not in ['I', 'X', 'C']:
-                            message = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "{}")'.format(current)
-                            return message
+                            current not in ['I', 'X', 'C']:
+                        message = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "{}")'.format(current)
+                        return message
 
                     # Check if the current character is repeated in succession
                     if current == successor:
                         if current not in ['I', 'X', 'C', 'M']:
                             message = 'Only "I", "X", "C" and "M" can be repeated in succession (Repeated "{}")'.format(current)
                             return message
-                        
+
                         if i < len(representation) - 3 and successor == representation[i + 2] == representation[i + 3]:
                             message = 'Characters cannot be repeated more than 3 times in one succession (Repeated "{}" too many times)'.format(current)
                             return message
@@ -213,15 +228,17 @@ class Roman:
                 message = 'The maximum Roman numeral is 3999 (Provided {})'.format(representation)
             else:
                 message = 'OK'
-            
+
             return message
         else:
             message = 'The representation of the Roman numeral must be in str or int format (Given: {})'.format(type(representation))
             raise RomanNumeralTypeError(message)
 
+    @validated
     @staticmethod
     def convert_to_decimal(roman_number: str) -> int:
         """ Converts the given Roman numeral to the coresponding decimal value """
+        roman_number = roman_number.upper()
         decimal_number = 0
         i = 0
 
@@ -235,7 +252,7 @@ class Roman:
                 if current < succesor:
                     # If succesor is greater, subtract current from succesor and store the result
                     decimal_number += (succesor - current)
-                    i += 1 # Skipping the succesor
+                    i += 1  # Skipping the succesor
                 elif current > succesor:
                     # If succesor is smaller, add all smaller occurences to
                     # current and store the result; only do this if the succesor isn't
@@ -261,11 +278,12 @@ class Roman:
             else:
                 # We are at the last character in the representation
                 decimal_number += current
-            
+
             i += 1
 
         return decimal_number
 
+    @validated
     @staticmethod
     def convert_to_roman(decimal_number: int) -> str:
         """ Converts the given decimal number to the coresponding Roman numeral """
