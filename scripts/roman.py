@@ -190,8 +190,8 @@ class Roman:
                     successor = representation[i + 1]
 
                     # Check if current character is succeeded by a bigger character
-                    if roman_characters.index(current) < roman_characters.index(successor):
-                        if current not in ['I', 'X', 'C']:
+                    if roman_characters.index(current) < roman_characters.index(successor) and \
+                        current not in ['I', 'X', 'C']:
                             message = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "{}")'.format(current)
                             return message
 
@@ -201,10 +201,9 @@ class Roman:
                             message = 'Only "I", "X", "C" and "M" can be repeated in succession (Repeated "{}")'.format(current)
                             return message
                         
-                        if i < len(representation) - 3:
-                            if successor == representation[i + 2] == representation[i + 3]:
-                                message = 'Characters cannot be repeated more than 3 times in one succession (Repeated "{}" too many times)'.format(current)
-                                return message
+                        if i < len(representation) - 3 and successor == representation[i + 2] == representation[i + 3]:
+                            message = 'Characters cannot be repeated more than 3 times in one succession (Repeated "{}" too many times)'.format(current)
+                            return message
 
             return 'OK'
         elif isinstance(representation, int):
