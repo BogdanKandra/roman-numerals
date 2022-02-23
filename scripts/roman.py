@@ -1,17 +1,17 @@
 from typing import Union
+from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
-from scripts import utils
 
 
 class Roman:
-    ''' Class which implements support for and arithmetic operations with Roman
-    Numerals '''
+    """ Class which implements support for and arithmetic operations with Roman
+    Numerals """
     def __init__(self, representation: Union[str, int]='N'):
-        ''' The constructor first checks if the representation is a valid roman
+        """ The constructor first checks if the representation is a valid roman
         numeral representation, then converts the representation to get the
         other one and then sets the appropriate fields **roman** and **decimal**
         on the object. Parameterless constructor creates the *N* roman numeral
-        (Nulla = 0) '''
+        (Nulla = 0) """
         validation_result = Roman.validate(representation)
 
         if validation_result == 'OK':
@@ -27,41 +27,41 @@ class Roman:
 
     ### Type conversion and string methods
     def __repr__(self):
-        ''' Returns an information-rich string representation of the Roman
-        numeral object. Typically used for debugging '''
+        """ Returns an information-rich string representation of the Roman
+        numeral object. Typically used for debugging """
         return 'Roman Numeral -> Roman representation: {self.roman}; decimal representation: {self.decimal}'.format(self=self)
 
     def __str__(self):
-        ''' Represents the Roman numeral in a more informal way. If this
-        function is not defined, __repr__ will be used '''
+        """ Represents the Roman numeral in a more informal way. If this
+        function is not defined, __repr__ will be used """
         return '{self.roman} ({self.decimal})'.format(self=self)
 
     def __int__(self):
-        ''' Converts the Roman numeral to an integer '''
+        """ Converts the Roman numeral to an integer """
         return self.decimal
 
     def __bool__(self):
-        ''' Converts the Roman numeral to a boolean '''
+        """ Converts the Roman numeral to a boolean """
         return bool(self.decimal)
 
     def __len__(self):
-        ''' Returns the number of letters in the roman representation '''
+        """ Returns the number of letters in the roman representation """
         return len(self.roman)
 
     def __abs__(self):
-        ''' Returns the absolute value of the Roman numeral. Since Roman
-        cannot be negative, the value will be returned as it is, in decimal format '''
+        """ Returns the absolute value of the Roman numeral. Since Roman
+        cannot be negative, the value will be returned as it is, in decimal format """
         return abs(self.decimal)
 
     def __hash__(self):
-        ''' Returns the hashed version of the object, for use on members of
+        """ Returns the hashed version of the object, for use on members of
         hashed collections, such as set, frozenset and dict. Without implementing
-        this, Roman numbers will not be usable as items in hashable collections '''
+        this, Roman numbers will not be usable as items in hashable collections """
         return hash(self.decimal)
 
     ### Arithmetic operators
     def __add__(self, other):
-        ''' Implements the left-sided addition for Roman numerals '''
+        """ Implements the left-sided addition for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal + other.decimal)
         elif isinstance(other, int):
@@ -70,12 +70,12 @@ class Roman:
             return Roman(self.decimal + Roman(other).decimal)
     
     def __radd__(self, other):
-        ''' Implements the right-sided addition for Roman numerals. Without
-        this function, computing 100 + Roman("X") is not possible '''
+        """ Implements the right-sided addition for Roman numerals. Without
+        this function, computing 100 + Roman("X") is not possible """
         return self.__add__(other)
 
     def __sub__(self, other):
-        ''' Implements the left-sided subtraction for Roman numerals '''
+        """ Implements the left-sided subtraction for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal - other.decimal)
         elif isinstance(other, int):
@@ -84,7 +84,7 @@ class Roman:
             return Roman(self.decimal - Roman(other).decimal)
 
     def __mul__(self, other):
-        ''' Implements the left-sided multiplication for Roman numerals '''
+        """ Implements the left-sided multiplication for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal * other.decimal)
         elif isinstance(other, int):
@@ -93,12 +93,12 @@ class Roman:
             return Roman(self.decimal * Roman(other).decimal)
 
     def __rmul__(self, other):
-        ''' Implements the right-sided multiplication for Roman numerals.
-        Without this function, computing 100 * Roman("X") is not possible '''
+        """ Implements the right-sided multiplication for Roman numerals.
+        Without this function, computing 100 * Roman("X") is not possible """
         return self.__mul__(other)
 
     def __floordiv__(self, other):
-        ''' Implements the left-sided floor division for Roman numerals '''
+        """ Implements the left-sided floor division for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal // other.decimal)
         elif isinstance(other, int):
@@ -107,7 +107,7 @@ class Roman:
             return Roman(self.decimal // Roman(other).decimal)
 
     def __mod__(self, other):
-        ''' Implements the left-sided modulus operation for Roman numerals '''
+        """ Implements the left-sided modulus operation for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal % other.decimal)
         elif isinstance(other, int):
@@ -117,7 +117,7 @@ class Roman:
 
     ### Comparison operators
     def __lt__(self, other):
-        ''' Implements < comparison between Roman numerals '''
+        """ Implements < comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal < other.decimal
         elif isinstance(other, int):
@@ -126,7 +126,7 @@ class Roman:
             return self.decimal < Roman(other).decimal
 
     def __le__(self, other):
-        ''' Implements <= comparison between Roman numerals '''
+        """ Implements <= comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal <= other.decimal
         elif isinstance(other, int):
@@ -135,7 +135,7 @@ class Roman:
             return self.decimal <= Roman(other).decimal
 
     def __gt__(self, other):
-        ''' Implements > comparison between Roman numerals '''
+        """ Implements > comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal > other.decimal
         elif isinstance(other, int):
@@ -144,7 +144,7 @@ class Roman:
             return self.decimal > Roman(other).decimal
 
     def __ge__(self, other):
-        ''' Implements >= comparison between Roman numerals '''
+        """ Implements >= comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal >= other.decimal
         elif isinstance(other, int):
@@ -153,7 +153,7 @@ class Roman:
             return self.decimal >= Roman(other).decimal
 
     def __eq__(self, other):
-        ''' Implements equality testing between Roman numerals '''
+        """ Implements equality testing between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal == other.decimal
         elif isinstance(other, int):
@@ -162,21 +162,21 @@ class Roman:
             return self.decimal == Roman(other).decimal
 
     def __ne__(self, other):
-        ''' Implements inequality testing between Roman numerals '''
+        """ Implements inequality testing between Roman numerals """
         return not self.__eq__(other)
 
     @staticmethod
     def validate(representation: Union[str, int]) -> str:
-        ''' Checks whether the specified representation is / can be a valid Roman
+        """ Checks whether the specified representation is / can be a valid Roman
         numeral representation. In the case of a string representation, it is
         first checked that the representation doesn't contain characters other
         than the supported ones. Then it is verified that only I, X and C are
         followed by larger letters and that only I, X, C and M are repeated in
         succession, no more than three times in each succession. In the case of
         integer representations, it is checked whether the representation is a
-        non-negative number, no bigger than 3999 (the maximum Roman numeral) '''
+        non-negative number, no bigger than 3999 (the maximum Roman numeral) """
         if isinstance(representation, str):
-            roman_characters = list(utils.ROMAN_TO_DECIMAL.keys())
+            roman_characters = [r.name for r in RomanNumeral]
 
             # Check if only the required characters are present
             character_set_difference = set(representation).difference(set(roman_characters))
@@ -222,16 +222,16 @@ class Roman:
 
     @staticmethod
     def convert_to_decimal(roman_number: str) -> int:
-        ''' Converts the given Roman numeral to the coresponding decimal value '''
+        """ Converts the given Roman numeral to the coresponding decimal value """
         decimal_number = 0
         i = 0
 
         while i < len(roman_number):
-            current = utils.ROMAN_TO_DECIMAL[roman_number[i]]
+            current = RomanNumeral[roman_number[i]].value
 
             if i < len(roman_number) - 1:
                 # There are remaining letters in the representation, look ahead
-                succesor = utils.ROMAN_TO_DECIMAL[roman_number[i + 1]]
+                succesor = RomanNumeral[roman_number[i + 1]].value
 
                 if current < succesor:
                     # If succesor is greater, subtract current from succesor and store the result
@@ -244,10 +244,10 @@ class Roman:
                     decimal_number += current
 
                     while succesor < current and (i + 1) < len(roman_number) - 1:
-                        if utils.ROMAN_TO_DECIMAL[roman_number[i + 2]] <= succesor:
+                        if RomanNumeral[roman_number[i + 2]].value <= succesor:
                             decimal_number += succesor
                             i += 1
-                            succesor = utils.ROMAN_TO_DECIMAL[roman_number[i + 1]]
+                            succesor = RomanNumeral[roman_number[i + 1]].value
                         else:
                             break
                 else:
@@ -255,7 +255,7 @@ class Roman:
                     decimal_number += (current * 2)
                     i += 1
                     if (i + 1) < len(roman_number) - 1:
-                        succsuccesor_num = utils.ROMAN_TO_DECIMAL[roman_number[i + 1]]
+                        succsuccesor_num = RomanNumeral[roman_number[i + 1]].value
                         if succsuccesor_num == current:
                             decimal_number += current
                             i += 1
@@ -269,11 +269,11 @@ class Roman:
 
     @staticmethod
     def convert_to_roman(decimal_number: int) -> str:
-        ''' Converts the given decimal number to the coresponding Roman numeral '''
+        """ Converts the given decimal number to the coresponding Roman numeral """
         if decimal_number == 0:
             roman_representation = 'N'
         else:
-            roman_characters = list(utils.ROMAN_TO_DECIMAL.keys())
+            roman_characters = [r.name for r in RomanNumeral]
             roman_representation = ''
             digit_order = 1
 
