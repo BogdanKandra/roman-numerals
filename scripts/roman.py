@@ -3,7 +3,7 @@ from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
 
-def validated(fn):
+def validated(fn: Callable[[Union[int, str]], Union[str, int]]) -> Callable[[Union[int, str]], Union[str, int]]:
     """ Decorator which enables the validation of input for functions taking
      roman numeral representations as a parameter (decimal or roman) """
     def wrapper(representation: Union[str, int]):
@@ -207,18 +207,18 @@ class Roman:
                     # Check if current character is succeeded by a bigger character
                     if roman_characters.index(current) < roman_characters.index(successor) and \
                             current not in ['I', 'X', 'C']:
-                        message = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "{}")'.format(current)
-                        return message
+                        message = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "{}")'
+                        return message.format(current)
 
                     # Check if the current character is repeated in succession
                     if current == successor:
                         if current not in ['I', 'X', 'C', 'M']:
-                            message = 'Only "I", "X", "C" and "M" can be repeated in succession (Repeated "{}")'.format(current)
-                            return message
+                            message = 'Only "I", "X", "C" and "M" can be repeated in succession (Repeated "{}")'
+                            return message.format(current)
 
                         if i < len(representation) - 3 and successor == representation[i + 2] == representation[i + 3]:
-                            message = 'Characters cannot be repeated more than 3 times in one succession (Repeated "{}" too many times)'.format(current)
-                            return message
+                            message = 'Characters cannot be repeated more than 3 times in one succession (Repeated "{}" too many times)'
+                            return message.format(current)
 
             return 'OK'
         elif isinstance(representation, int):
@@ -231,8 +231,8 @@ class Roman:
 
             return message
         else:
-            message = 'The representation of the Roman numeral must be in str or int format (Given: {})'.format(type(representation))
-            raise RomanNumeralTypeError(message)
+            message = 'The representation of the Roman numeral must be in str or int format (Given: {})'
+            raise RomanNumeralTypeError(message.format(type(representation)))
 
     @validated
     @staticmethod
