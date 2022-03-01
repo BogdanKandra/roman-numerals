@@ -12,7 +12,7 @@ class TestRoman:
         characters """
         representation = 'KANDIA'
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'The string representation provided contains invalid characters:' in e
 
     def test_invalid_representation_invalid_subtractive_numerals(self):
@@ -21,7 +21,7 @@ class TestRoman:
         subtractive numerals """
         representation = 'LM'
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'Only "I", "X" and "C" can be used as subtractive numerals' in e
 
     def test_invalid_representation_invalid_repeated_numerals(self):
@@ -30,7 +30,7 @@ class TestRoman:
         repeated numerals """
         representation = 'LLD'
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'Only "I", "X", "C" and "M" can be repeated in succession' in e
 
     def test_invalid_representation_over_repeated_numerals(self):
@@ -39,7 +39,7 @@ class TestRoman:
         repetitions of a valid character, in a single succession """
         representation = 'IIIII'
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'Characters cannot be repeated more than 3 times in one succession' in e
 
     def test_invalid_representation_negative_number(self):
@@ -47,7 +47,7 @@ class TestRoman:
         a Roman numeral from a negative number """
         representation = -420
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'Negative Roman numerals do not exist; conversion is impossible' in e
 
     def test_invalid_representation_too_big(self):
@@ -55,7 +55,7 @@ class TestRoman:
         a Roman numeral from a number too big """
         representation = 7777
         with pytest.raises(RomanNumeralValueError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'The maximum Roman numeral is 3999' in e
 
     def test_invalid_representation_type(self):
@@ -63,7 +63,7 @@ class TestRoman:
         a Roman numeral from a representation of an invalid format """
         representation = 8.5
         with pytest.raises(RomanNumeralTypeError) as e:
-            r = Roman(representation)
+            Roman(representation)
             assert 'The representation of the Roman numeral must be in str or int format' in e
 
     def test_valid_representation_string(self):
@@ -423,6 +423,45 @@ class TestRoman:
         r1 = Roman('I')
         r2 = 'I'
         assert not r1 != r2
+
+    def test_contains(self):
+        """ Tests that Roman numerals can be used in conjunction with the *in* and *not in* operators for membership of
+         strings (and only strings) into the roman representation of the numeral """
+        r = Roman('CLIII')
+        assert 'C' in r
+        assert 'c' in r
+        assert 'X' not in r
+
+        with pytest.raises(TypeError) as e:
+            2 in r
+            assert "'in <Roman>' requires string as left operand, not" in e
+
+    ### Tests for the iterator methods
+    def test_iterator_protocol(self):
+        """ Tests that the Python Iterator Protocol is respected by the Roman class. As such, it will be tested that
+         passing a Roman instance to the iter() function will result in an iterator which can be looped over using the
+         next() function. The "exhaustion" of the iterator will also be tested (i.e. calling next() after the last
+         element was returned raises a StopIteration exception) """
+        roman_numeral = Roman(2022)
+        roman_iterator = iter(roman_numeral)
+        letters = []
+
+        while True:
+            try:
+                letter = next(roman_iterator)
+            except StopIteration:
+                break  # Iterator is exhausted; stop the loop
+            else:
+                letters.append(letter)
+
+        assert letters == ['M', 'M', 'X', 'X', 'I', 'I']
+
+    def test_iterator_is_iterable(self):
+        """ Tests that the iterator is an iterable """
+        roman_numeral = Roman(1993)
+        roman_iterator = iter(roman_numeral)
+
+        assert roman_iterator is iter(roman_iterator)
 
     ### Invertibility test
     def test_invertible(self):

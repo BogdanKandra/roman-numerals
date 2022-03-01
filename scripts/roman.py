@@ -38,6 +38,8 @@ class Roman:
         else:
             raise RomanNumeralValueError(validation_result)
 
+        self.idx = 0
+
     ### Type conversion and string methods
     def __repr__(self):
         """ Returns an information-rich string representation of the Roman
@@ -178,6 +180,32 @@ class Roman:
     def __ne__(self, other):
         """ Implements inequality testing between Roman numerals """
         return not self.__eq__(other)
+
+    def __contains__(self, item):
+        """ Enables membership testing for the *in* and *not in* operators """
+        if isinstance(item, str):
+            return item.upper() in self.roman
+        else:
+            raise TypeError("'in <Roman>' requires string as left operand, not {}".format(type(item)))
+
+    ### Iterator methods
+    def __iter__(self):
+        """ Represents the basis of the iterator protocol, making the Roman class *iterable*. It returns an iterator
+         object that defines the __next__ method; self is returned in our case, because the __next__ method is defined
+         in this class. This allows Roman variables to be used with the *for .. in ..* statements, which call __iter__
+         internally """
+        self.idx = 0
+        return self
+
+    def __next__(self):
+        """ Returns the next item from the iterator. If there are no further items, raise the StopIteration exception"""
+        if self.idx == len(self.roman):
+            raise StopIteration
+
+        item = self.roman[self.idx]
+        self.idx += 1
+
+        return item
 
     @staticmethod
     def validate(representation: Union[str, int]) -> str:
