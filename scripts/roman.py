@@ -3,6 +3,7 @@ from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
 
+### User-defined decorator function
 def validated(fn: Callable[[Union[int, str]], Union[str, int]]) -> Callable[[Union[int, str]], Union[str, int]]:
     """ Decorator which enables the validation of input for functions taking
      roman numeral representations as a parameter (decimal or roman) """
