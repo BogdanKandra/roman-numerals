@@ -353,3 +353,16 @@ class Roman:
                 digit_order += 1
 
         return roman_representation
+
+    @staticmethod
+    def fibonacci_generator():
+        """ Generator function which generates the Roman Fibonacci numbers """
+        a, b = Roman(1), Roman(1)
+
+        while True:
+            yield a
+            if a.decimal + b.decimal < 4000:
+                a, b = b, a + b
+            else:
+                yield b
+                break

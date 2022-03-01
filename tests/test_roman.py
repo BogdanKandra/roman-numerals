@@ -436,7 +436,7 @@ class TestRoman:
             2 in r
             assert "'in <Roman>' requires string as left operand, not" in e
 
-    ### Tests for the iterator methods
+    ### Tests for the iterator and generator methods
     def test_iterator_protocol(self):
         """ Tests that the Python Iterator Protocol is respected by the Roman class. As such, it will be tested that
          passing a Roman instance to the iter() function will result in an iterator which can be looped over using the
@@ -446,6 +446,7 @@ class TestRoman:
         roman_iterator = iter(roman_numeral)
         letters = []
 
+        # This is a simulation of the Python for loop
         while True:
             try:
                 letter = next(roman_iterator)
@@ -462,6 +463,14 @@ class TestRoman:
         roman_iterator = iter(roman_numeral)
 
         assert roman_iterator is iter(roman_iterator)
+
+    def test_fibonacci_generator(self):
+        """ Tests that the generator function generates the expected values """
+        expected_numbers = [Roman(1), Roman(1), Roman(2), Roman(3), Roman(5), Roman(8), Roman(13),
+                            Roman(21), Roman(34), Roman(55), Roman(89), Roman(144), Roman(233),
+                            Roman(377), Roman(610), Roman(987), Roman(1597), Roman(2584)]
+
+        assert list(Roman.fibonacci_generator()) == expected_numbers
 
     ### Invertibility test
     def test_invertible(self):
