@@ -1,13 +1,16 @@
 # roman-numerals-class
-Roman numerals convertor, a little project illustrating OOP concepts in Python
+Roman numerals convertor, a little project illustrating advanced Python concepts
 
 This project contains:
-- User-defined class, with constructors, static methods and many overriden [magic methods](https://docs.python.org/3/reference/datamodel.html) (_scripts/roman.py_)
-- Custom made [decorator](https://www.python.org/dev/peps/pep-0318/) (_scripts/roman.py_)
-- Custom made [enum](https://docs.python.org/3/library/enum.html) (_scripts/enums.py_)
-- Custom made [exceptions](https://docs.python.org/3/tutorial/errors.html) (_scripts/exceptions.py_)
-- [Unit tests](https://docs.pytest.org/en/7.0.x/) for all functionality in the project (_tests\test_roman.py_)
-- Requirements file, holding the dependencies (_requirements.txt_)
+- User-defined class with constructors, static methods and many overriden [magic methods](https://docs.python.org/3/reference/datamodel.html)
+  - Users are able to do type conversion, string representation, arithmetic and comparison operations, using Roman numerals and other numeric types
+- Custom made [decorator](https://www.python.org/dev/peps/pep-0318/)
+- Custom made [enum](https://docs.python.org/3/library/enum.html)
+- Custom made [exceptions](https://docs.python.org/3/tutorial/errors.html)
+- Custom made [generator](https://python-reference.readthedocs.io/en/latest/docs/generator/)
+- Implementation of the [Iterator Protocol](https://wiki.python.org/moin/Iterator)
+- [Unit tests](https://docs.pytest.org/en/7.0.x/) for all functionality in the project
+- Requirements file, holding the dependencies
 
 Steps for using the project:
 - Create a virtual environment for the project and activate it: `conda create -n env_name python=3.10`
