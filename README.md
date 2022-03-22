@@ -1,4 +1,4 @@
-# roman-numerals-class
+# roman-numerals
 Roman numerals convertor, a little project illustrating advanced Python concepts
 
 This project contains:
