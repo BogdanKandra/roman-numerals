@@ -1,5 +1,5 @@
-from scripts.exceptions import RomanNumeralTypeError, RomanNumeralValueError
-from scripts.roman import Roman
+from roman.exceptions import RomanNumeralTypeError, RomanNumeralValueError
+from roman.roman import Roman
 import pytest
 
 
@@ -7,36 +7,32 @@ class TestRoman:
     """ Tests for the Roman class """
     ### Tests for the creation of Roman numerals
     def test_invalid_representation_characters(self):
-        """ Tests that a RomanNumeralValueError is raised when trying to create
-        a Roman numeral with a representation string containing unsupported
-        characters """
+        """ Tests that a RomanNumeralValueError is raised when trying to create a Roman numeral with a
+        representation string containing unsupported characters """
         representation = 'KANDIA'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
             assert 'The string representation provided contains invalid characters:' in e
 
     def test_invalid_representation_invalid_subtractive_numerals(self):
-        """ Tests that a RomanNumeralValueError is raised when trying to create
-        a Roman numeral with a representation string containing invalid
-        subtractive numerals """
+        """ Tests that a RomanNumeralValueError is raised when trying to create a Roman numeral with a
+        representation string containing invalid subtractive numerals """
         representation = 'LM'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
             assert 'Only "I", "X" and "C" can be used as subtractive numerals' in e
 
     def test_invalid_representation_invalid_repeated_numerals(self):
-        """ Tests that a RomanNumeralValueError is raised when trying to create
-        a Roman numeral with a representation string containing invalid
-        repeated numerals """
+        """ Tests that a RomanNumeralValueError is raised when trying to create a Roman numeral with a
+        representation string containing invalid repeated numerals """
         representation = 'LLD'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
             assert 'Only "I", "X", "C" and "M" can be repeated in succession' in e
 
     def test_invalid_representation_over_repeated_numerals(self):
-        """ Tests that a RomanNumeralValueError is raised when trying to create
-        a Roman numeral with a representation string containing too many
-        repetitions of a valid character, in a single succession """
+        """ Tests that a RomanNumeralValueError is raised when trying to create a Roman numeral with a
+        representation string containing too many repetitions of a valid character, in a single succession """
         representation = 'IIIII'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
@@ -112,8 +108,7 @@ class TestRoman:
         assert str(r) == expected
 
     def test_int(self):
-        """ Tests that the int() function returns the decimal representation of
-        the Roman numeral """
+        """ Tests that the int() function returns the decimal representation of the Roman numeral """
         representation = 'CCCXXXIII'
         r = Roman(representation)
 
@@ -121,8 +116,7 @@ class TestRoman:
         assert int(r) == expected
 
     def test_bool(self):
-        """ Tests that the bool() function correctly identifies zero and non-zero
-        Roman numerals """
+        """ Tests that the bool() function correctly identifies zero and non-zero Roman numerals """
         representation = 'CXI'
         r = Roman(representation)
         expected = True
@@ -143,8 +137,7 @@ class TestRoman:
         assert len(r) == expected
 
     def test_abs(self):
-        """ Tests that the abs() function correctly prints the decimal
-        representation of a Roman numeral """
+        """ Tests that the abs() function correctly prints the decimal representation of a Roman numeral """
         representation = 'MCMXCIII'
         r = Roman(representation)
 
