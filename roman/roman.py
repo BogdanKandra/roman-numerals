@@ -1,6 +1,6 @@
 from typing import Callable, Union
-from roman.enums import RomanNumeral
-from roman.exceptions import RomanNumeralValueError, RomanNumeralTypeError
+from roman_numerals.enums import RomanNumeral
+from roman_numerals.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
 
 ### User-defined decorator function
@@ -18,11 +18,14 @@ def validated(fn: Callable[[Union[int, str]], Union[str, int]]) -> Callable[[Uni
 
 
 class Roman:
-    """ Class which implements support for and arithmetic operations with Roman numerals """
+    """ Class which implements support for and arithmetic operations with Roman
+    Numerals """
     def __init__(self, representation: Union[str, int] = 'N'):
-        """ The constructor first checks if the representation is a valid roman numeral representation, then converts
-        the representation to get the other one and then sets the appropriate fields **roman** and **decimal**
-        on the object. Parameterless constructor creates the *N* roman numeral (Nulla = 0) """
+        """ The constructor first checks if the representation is a valid roman
+        numeral representation, then converts the representation to get the
+        other one and then sets the appropriate fields **roman** and **decimal**
+        on the object. Parameterless constructor creates the *N* roman numeral
+        (Nulla = 0) """
         validation_result = Roman.validate(representation)
 
         if validation_result == 'OK':
@@ -63,13 +66,14 @@ class Roman:
         return len(self.roman)
 
     def __abs__(self):
-        """ Returns the absolute value of the Roman numeral. Since Roman numerals
+        """ Returns the absolute value of the Roman numeral. Since Roman
         cannot be negative, the value will be returned as it is, in decimal format """
         return abs(self.decimal)
 
     def __hash__(self):
-        """ Returns the hashed version of the object, for use on members of hashed collections, such as set, frozenset
-        and dict. Without implementing this, Roman numbers would not be usable as items in hashable collections """
+        """ Returns the hashed version of the object, for use on members of
+        hashed collections, such as set, frozenset and dict. Without implementing
+        this, Roman numbers will not be usable as items in hashable collections """
         return hash(self.decimal)
 
     ### Arithmetic operators
@@ -84,7 +88,7 @@ class Roman:
 
     def __radd__(self, other):
         """ Implements the right-sided addition for Roman numerals. Without
-        this function, computing 100 + Roman("X") would not be possible """
+        this function, computing 100 + Roman("X") is not possible """
         return self.__add__(other)
 
     def __sub__(self, other):
@@ -107,7 +111,7 @@ class Roman:
 
     def __rmul__(self, other):
         """ Implements the right-sided multiplication for Roman numerals.
-        Without this function, computing 100 * Roman("X") would not be possible """
+        Without this function, computing 100 * Roman("X") is not possible """
         return self.__mul__(other)
 
     def __floordiv__(self, other):
@@ -206,12 +210,14 @@ class Roman:
 
     @staticmethod
     def validate(representation: Union[str, int]) -> str:
-        """ Checks whether the specified representation is / can be a valid Roman numeral representation. In the case of
-        a string representation, it is first checked that the representation doesn't contain characters other than the
-        supported ones. Then it is verified that only I, X and C are followed by larger letters and that only I, X, C
-        and M are repeated in succession, no more than three times in each succession. In the case of integer
-        representations, it is checked whether the representation is a non-negative number, no bigger than 3999 (the
-        maximum Roman numeral) """
+        """ Checks whether the specified representation is / can be a valid Roman
+        numeral representation. In the case of a string representation, it is
+        first checked that the representation doesn't contain characters other
+        than the supported ones. Then it is verified that only I, X and C are
+        followed by larger letters and that only I, X, C and M are repeated in
+        succession, no more than three times in each succession. In the case of
+        integer representations, it is checked whether the representation is a
+        non-negative number, no bigger than 3999 (the maximum Roman numeral) """
         if isinstance(representation, str):
             representation = representation.upper()
             roman_characters = [r.name for r in RomanNumeral]
@@ -277,8 +283,9 @@ class Roman:
                     decimal_number += (succesor - current)
                     i += 1  # Skipping the succesor
                 elif current > succesor:
-                    # If succesor is smaller, add all smaller occurences to current and store the result
-                    # only do this if the succesor isn't a subtractive numeral
+                    # If succesor is smaller, add all smaller occurences to
+                    # current and store the result; only do this if the succesor isn't
+                    # a subtractive numeral
                     decimal_number += current
 
                     while succesor < current and (i + 1) < len(roman_number) - 1:
