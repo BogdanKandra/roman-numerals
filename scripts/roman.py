@@ -1,6 +1,6 @@
 from typing import Callable, Union
-from roman_numerals.enums import RomanNumeral
-from roman_numerals.exceptions import RomanNumeralValueError, RomanNumeralTypeError
+from scripts.enums import RomanNumeral
+from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
 
 ### User-defined decorator function
