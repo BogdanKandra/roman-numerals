@@ -322,26 +322,26 @@ class Roman:
                 if last_digit in [1, 2, 3]:
                     letter_index = digit_order * 2 - 1
                     roman_representation = last_digit * roman_characters[letter_index] + \
-                        roman_representation
+                                           roman_representation
                 elif last_digit == 4:
                     letter_index = digit_order * 2 - 1
                     roman_representation = roman_characters[letter_index] + \
-                        roman_characters[letter_index + 1] + \
-                        roman_representation
+                                           roman_characters[letter_index + 1] + \
+                                           roman_representation
                 elif last_digit == 5:
                     letter_index = digit_order * 2
                     roman_representation = roman_characters[letter_index] + \
-                        roman_representation
+                                           roman_representation
                 elif last_digit in [6, 7, 8]:
                     letter_index = digit_order * 2
                     roman_representation = roman_characters[letter_index] + \
-                        (last_digit - 5) * roman_characters[letter_index - 1] + \
-                        roman_representation
+                                           (last_digit - 5) * roman_characters[letter_index - 1] + \
+                                           roman_representation
                 elif last_digit == 9:
                     letter_index = digit_order * 2 - 1
                     roman_representation = roman_characters[letter_index] + \
-                        roman_characters[letter_index + 2] + \
-                        roman_representation
+                                           roman_characters[letter_index + 2] + \
+                                           roman_representation
 
                 decimal_number = decimal_number // 10
                 digit_order += 1
