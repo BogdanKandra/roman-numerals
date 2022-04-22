@@ -49,8 +49,8 @@ class Roman:
         return representation.format(self=self)
 
     def __str__(self):
-        """ Represents the Roman numeral in a more informal way. If this
-        function is not defined, __repr__ will be used """
+        """ Represents the Roman numeral in a more informal way. It is called when printing and if this function is not
+        defined, __repr__ will be used """
         return '{self.roman} ({self.decimal})'.format(self=self)
 
     def __int__(self):
