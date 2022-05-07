@@ -10,7 +10,7 @@ This project contains:
 - Custom made [generator](https://python-reference.readthedocs.io/en/latest/docs/generator/)
 - Implementation of the [Iterator Protocol](https://wiki.python.org/moin/Iterator)
 - [Unit tests](https://docs.pytest.org/en/7.0.x/) for all functionality in the project
-- Requirements file, holding the dependencies
+- Requirements file, holding the runtime dependencies
 
 Steps for using the project:
 - Create a virtual environment for the project and activate it: `conda create -n env_name python=3.10`
