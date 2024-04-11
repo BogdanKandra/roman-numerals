@@ -6,7 +6,7 @@ from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 ### User-defined decorator function
 def validated(fn: Callable[[Union[int, str]], Union[str, int]]) -> Callable[[Union[int, str]], Union[str, int]]:
     """ Decorator which enables the validation of input for functions taking roman numeral representations as a
-    parameter (decimal or roman). The typing syntax used here means that <fn> takes a parameter of type Union[int, str]
+    parameter (decimal or string). The typing syntax used here means that <fn> takes a parameter of type Union[int, str]
     and returns a value of type Union[str, int]. The decorator will wrap the function and check if the provided
     representation is valid before calling the wrapped function. If the representation is invalid, a
     RomanNumeralValueError exception will be raised. If the representation is valid, the wrapped function will be
@@ -40,11 +40,12 @@ class Roman:
         else:
             raise RomanNumeralValueError(validation_result)
 
-        self.idx = 0
+        self.iter_idx = 0
 
     ### Type conversion and string methods
     def __repr__(self):
-        """ Returns an information-rich string representation of the Roman numeral object. Typically used for debugging """
+        """ Returns an information-rich string representation of the Roman numeral object. Typically used for debugging.
+        This will also be the form used in hashable collections, such as sets, frozensets and dictionaries. """
         representation = 'Roman Numeral -> Roman representation: {self.roman}; decimal representation: {self.decimal}'
         return representation.format(self=self)
 
@@ -194,16 +195,16 @@ class Roman:
          object that defines the __next__ method; self is returned in our case, because the __next__ method is defined
          in this class. This allows Roman variables to be used with the *for .. in ..* statements, which call __iter__
          internally """
-        self.idx = 0
+        self.iter_idx = 0
         return self
 
     def __next__(self):
         """ Returns the next item from the iterator. If there are no further items, raise the StopIteration exception"""
-        if self.idx == len(self.roman):
+        if self.iter_idx == len(self.roman):
             raise StopIteration
 
-        item = self.roman[self.idx]
-        self.idx += 1
+        item = self.roman[self.iter_idx]
+        self.iter_idx += 1
 
         return item
 
