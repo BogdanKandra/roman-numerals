@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, Union
 from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
@@ -42,7 +43,7 @@ class Roman:
 
         self.iter_idx = 0
 
-    ### Type conversion and string methods
+    ### Type conversion methods
     def __repr__(self):
         """ Returns an information-rich string representation of the Roman numeral object. Typically used for debugging.
         This will also be the form used in hashable collections, such as sets, frozensets and dictionaries. """
@@ -208,6 +209,7 @@ class Roman:
 
         return item
 
+    ### Static utility methods
     @staticmethod
     def validate(representation: Union[str, int]) -> str:
         """ Checks whether the specified representation is / can be a valid Roman numeral representation. In the case
@@ -353,6 +355,7 @@ class Roman:
 
         return roman_representation
 
+    ### User-defined Generator
     @staticmethod
     def fibonacci_generator():
         """ Generator function which generates the Roman Fibonacci numbers """
@@ -365,3 +368,23 @@ class Roman:
             else:
                 yield b
                 break
+
+    ### User-defined Coroutines
+    @staticmethod
+    async def producer(queue: asyncio.Queue):
+        ''' Produce Roman Fibonacci numbers and put them into a queue'''
+        for numeral in Roman.fibonacci_generator():
+            await asyncio.sleep(0.5)  # Simulate I/O-bound operation
+            await queue.put(numeral)
+        await queue.put(None)  # Signal to the consumer that the producer is done
+
+    @staticmethod
+    async def consumer(queue: asyncio.Queue):
+        ''' Consume Roman Fibonacci numbers from a queue and print them if they are prime '''
+        while True:
+            number = await queue.get()
+            if number is None:
+                queue.task_done()
+                break
+            print(f'Consumed {number}')
+            queue.task_done()
