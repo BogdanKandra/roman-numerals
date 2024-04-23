@@ -20,5 +20,7 @@ Steps for using the project:
 
 Steps for testing the project:
 - Run the [pytest](https://docs.pytest.org/en/8.1.x/) test suit from the project base directory: `python -m pytest tests`
-- Run the [flake8](https://flake8.pycqa.org/en/latest/) tool from the project base directory: `flake8`
+- Run the [flake8](https://flake8.pycqa.org/en/latest/) linting tool from the project base directory: `flake8`
   - [Configure flake8](https://flake8.pycqa.org/en/latest/user/configuration.html) by editing the `.flake8` file
+- Run the [mypy](https://mypy.readthedocs.io/en/stable/) static type checker from the project base directory: `mypy`
+  - [Configure mypy](https://mypy.readthedocs.io/en/stable/config_file.html#config-file) by editing the `mypy.ini` file
