@@ -1,3 +1,4 @@
+flake8
 ipykernel
 pytest==6.2.4
 pytest-asyncio==0.23.6
