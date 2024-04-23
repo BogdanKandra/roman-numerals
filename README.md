@@ -1,5 +1,5 @@
 # roman-numerals
-Roman numerals convertor, a little project illustrating advanced Python concepts
+Roman numerals convertor, a small project illustrating advanced Python concepts
 
 This project contains:
 - User-defined class with constructors, static methods and many overriden [magic methods](https://docs.python.org/3/reference/datamodel.html)
