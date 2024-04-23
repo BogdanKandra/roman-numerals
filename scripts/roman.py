@@ -253,7 +253,7 @@ class Roman:
             return 'OK'
         elif isinstance(representation, int):
             if representation < 0:
-                message = 'Negative Roman numerals do not exist; conversion is impossible (Provided {})'.format(representation)
+                message = f'Negative Roman numerals do not exist; conversion is impossible (Provided {representation})'
             elif representation > 3999:
                 message = 'The maximum Roman numeral is 3999 (Provided {})'.format(representation)
             else:

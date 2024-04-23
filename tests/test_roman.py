@@ -72,7 +72,7 @@ class TestRoman:
         representation string and the conversion to decimal is correct """
         representation = 'MMXXI'
         r = Roman(representation)
-        
+
         assert r.decimal == 2021
         assert r.roman == 'MMXXI'
 
@@ -554,7 +554,7 @@ class TestRoman:
                             Roman(3847), Roman(3851), Roman(3853), Roman(3863), Roman(3877), Roman(3881), Roman(3889),
                             Roman(3907), Roman(3911), Roman(3917), Roman(3919), Roman(3923), Roman(3929), Roman(3931),
                             Roman(3943), Roman(3947), Roman(3967), Roman(3989)]
-        
+
         assert list(Roman.prime_generator()) == expected_numbers
 
     ### Invertibility test
@@ -566,10 +566,10 @@ class TestRoman:
 
         for i in range(4000):
             romans.append(Roman.convert_to_roman(i))
-        
+
         for r in romans:
             decimals.append(Roman.convert_to_decimal(r))
-        
+
         assert decimals == list(range(4000))
 
     ### Tests for the coroutines
@@ -582,7 +582,7 @@ class TestRoman:
         # Assert that the queue contains the expected numbers
         for r in Roman.fibonacci_generator():
             assert await queue.get() == r
-        assert await queue.get() == None
+        assert await queue.get() is None
 
     @pytest.mark.asyncio
     async def test_consumer(self):
