@@ -1,5 +1,6 @@
 import asyncio
-from typing import Callable, Union
+import itertools
+from typing import Callable, Iterator, Union
 from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
@@ -44,41 +45,41 @@ class Roman:
         self.iter_idx = 0
 
     ### Type conversion methods
-    def __repr__(self):
+    def __repr__(self) -> str:
         """ Returns an information-rich string representation of the Roman numeral object. Typically used for debugging.
         This will also be the form used in hashable collections, such as sets, frozensets and dictionaries. """
         representation = 'Roman Numeral -> Roman representation: {self.roman}; decimal representation: {self.decimal}'
         return representation.format(self=self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """ Represents the Roman numeral in a more informal way. It is called when printing and if this function is not
         defined, __repr__ will be used """
         return '{self.roman} ({self.decimal})'.format(self=self)
 
-    def __int__(self):
+    def __int__(self) -> int:
         """ Converts the Roman numeral to an integer """
         return self.decimal
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         """ Converts the Roman numeral to a boolean """
         return bool(self.decimal)
 
-    def __len__(self):
+    def __len__(self) -> int:
         """ Returns the number of letters in the roman representation """
         return len(self.roman)
 
-    def __abs__(self):
+    def __abs__(self) -> int:
         """ Returns the absolute value of the Roman numeral. Since Roman cannot be negative, the value will be returned
         as it is, in decimal format """
         return abs(self.decimal)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """ Returns the hashed version of the object, for use on members of hashed collections, such as set, frozenset
         and dict. Without implementing this, Roman numbers will not be usable as items in hashable collections """
         return hash(self.decimal)
 
     ### Arithmetic operators
-    def __add__(self, other):
+    def __add__(self, other) -> 'Roman':
         """ Implements the left-sided addition for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal + other.decimal)
@@ -87,12 +88,12 @@ class Roman:
         elif isinstance(other, str):
             return Roman(self.decimal + Roman(other).decimal)
 
-    def __radd__(self, other):
+    def __radd__(self, other) -> 'Roman':
         """ Implements the right-sided addition for Roman numerals. Without this function, computing 100 + Roman("X")
         is not possible """
         return self.__add__(other)
 
-    def __sub__(self, other):
+    def __sub__(self, other) -> 'Roman':
         """ Implements the left-sided subtraction for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal - other.decimal)
@@ -101,7 +102,7 @@ class Roman:
         elif isinstance(other, str):
             return Roman(self.decimal - Roman(other).decimal)
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> 'Roman':
         """ Implements the left-sided multiplication for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal * other.decimal)
@@ -110,12 +111,12 @@ class Roman:
         elif isinstance(other, str):
             return Roman(self.decimal * Roman(other).decimal)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other) -> 'Roman':
         """ Implements the right-sided multiplication for Roman numerals. Without this function, computing
         100 * Roman("X") is not possible """
         return self.__mul__(other)
 
-    def __floordiv__(self, other):
+    def __floordiv__(self, other) -> 'Roman':
         """ Implements the left-sided floor division for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal // other.decimal)
@@ -124,7 +125,7 @@ class Roman:
         elif isinstance(other, str):
             return Roman(self.decimal // Roman(other).decimal)
 
-    def __mod__(self, other):
+    def __mod__(self, other) -> 'Roman':
         """ Implements the left-sided modulus operation for Roman numerals """
         if isinstance(other, Roman):
             return Roman(self.decimal % other.decimal)
@@ -134,7 +135,7 @@ class Roman:
             return Roman(self.decimal % Roman(other).decimal)
 
     ### Comparison operators
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         """ Implements < comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal < other.decimal
@@ -143,7 +144,7 @@ class Roman:
         elif isinstance(other, str):
             return self.decimal < Roman(other).decimal
 
-    def __le__(self, other):
+    def __le__(self, other) -> bool:
         """ Implements <= comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal <= other.decimal
@@ -152,7 +153,7 @@ class Roman:
         elif isinstance(other, str):
             return self.decimal <= Roman(other).decimal
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         """ Implements > comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal > other.decimal
@@ -161,7 +162,7 @@ class Roman:
         elif isinstance(other, str):
             return self.decimal > Roman(other).decimal
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         """ Implements >= comparison between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal >= other.decimal
@@ -170,7 +171,7 @@ class Roman:
         elif isinstance(other, str):
             return self.decimal >= Roman(other).decimal
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         """ Implements equality testing between Roman numerals """
         if isinstance(other, Roman):
             return self.decimal == other.decimal
@@ -179,11 +180,11 @@ class Roman:
         elif isinstance(other, str):
             return self.decimal == Roman(other).decimal
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         """ Implements inequality testing between Roman numerals """
         return not self.__eq__(other)
 
-    def __contains__(self, item):
+    def __contains__(self, item) -> bool:
         """ Enables membership testing for the *in* and *not in* operators """
         if isinstance(item, str):
             return item.upper() in self.roman
@@ -191,7 +192,7 @@ class Roman:
             raise TypeError("'in <Roman>' requires string as left operand, not {}".format(type(item)))
 
     ### Iterator methods
-    def __iter__(self):
+    def __iter__(self) -> 'Roman':
         """ Represents the basis of the iterator protocol, making the Roman class *iterable*. It returns an iterator
          object that defines the __next__ method; self is returned in our case, because the __next__ method is defined
          in this class. This allows Roman variables to be used with the *for .. in ..* statements, which call __iter__
@@ -199,7 +200,7 @@ class Roman:
         self.iter_idx = 0
         return self
 
-    def __next__(self):
+    def __next__(self) -> str:
         """ Returns the next item from the iterator. If there are no further items, raise the StopIteration exception"""
         if self.iter_idx == len(self.roman):
             raise StopIteration
@@ -355,9 +356,9 @@ class Roman:
 
         return roman_representation
 
-    ### User-defined Generator
+    ### User-defined Generators
     @staticmethod
-    def fibonacci_generator():
+    def fibonacci_generator() -> Iterator['Roman']:
         """ Generator function which generates the Roman Fibonacci numbers """
         a, b = Roman(1), Roman(1)
 
@@ -369,22 +370,43 @@ class Roman:
                 yield b
                 break
 
+    @staticmethod
+    def prime_generator() -> Iterator['Roman']:
+        """ Generator function which generates the Roman prime numbers """
+        yield Roman(2)
+
+        candidate = 3
+        divisors = [2]
+
+        while True:
+            # If dividing <candidate> by all the numbers in <divisors>, up to and including sqrt(<candidate>), produces
+            # a non-zero remainder, then <candidate> is prime
+            if all(candidate % f > 0 for f in itertools.takewhile(lambda f: f * f <= candidate, divisors)):
+                yield Roman(candidate)
+                divisors.append(candidate)
+            if candidate + 2 < 4000:
+                candidate += 2
+            else:
+                break
+
     ### User-defined Coroutines
     @staticmethod
-    async def producer(queue: asyncio.Queue):
+    async def producer(queue: asyncio.Queue) -> None:
         ''' Produce Roman Fibonacci numbers and put them into a queue'''
-        for numeral in Roman.fibonacci_generator():
+        for number in Roman.fibonacci_generator():
+            await queue.put(number)
             await asyncio.sleep(0.5)  # Simulate I/O-bound operation
-            await queue.put(numeral)
         await queue.put(None)  # Signal to the consumer that the producer is done
 
     @staticmethod
-    async def consumer(queue: asyncio.Queue):
+    async def consumer(queue: asyncio.Queue) -> None:
         ''' Consume Roman Fibonacci numbers from a queue and print them if they are prime '''
+        roman_primes = list(Roman.prime_generator())
+
         while True:
             number = await queue.get()
-            if number is None:
-                queue.task_done()
-                break
-            print(f'Consumed {number}')
             queue.task_done()
+            if number is None:
+                break
+            if number in roman_primes:
+                print(f'Consumed Fibonacci prime: {number}')
