@@ -400,8 +400,9 @@ class Roman:
 
     @staticmethod
     async def consumer(queue: asyncio.Queue) -> None:
-        ''' Consume Roman Fibonacci numbers from a queue and print them if they are prime '''
+        ''' Consume Roman numbers from a queue and print them if they are prime '''
         roman_primes = list(Roman.prime_generator())
+        consumed_primes = []
 
         while True:
             number = await queue.get()
@@ -409,4 +410,7 @@ class Roman:
             if number is None:
                 break
             if number in roman_primes:
-                print(f'Consumed Fibonacci prime: {number}')
+                print(f'Consumed Roman prime: {number}')
+                consumed_primes.append(number)
+
+        return consumed_primes
