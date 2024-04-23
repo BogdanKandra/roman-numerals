@@ -1,6 +1,6 @@
 import asyncio
 import itertools
-from typing import Callable, Iterator, Union
+from typing import Callable, Iterator, List, Union
 from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
@@ -34,11 +34,11 @@ class Roman:
         if validation_result == 'OK':
             # Convert it and set fields
             if isinstance(representation, str):
-                self.roman = representation.upper()
-                self.decimal = Roman.convert_to_decimal(representation)
+                self.roman: str = representation.upper()
+                self.decimal: int = Roman.convert_to_decimal(representation)
             elif isinstance(representation, int):
-                self.roman = Roman.convert_to_roman(representation)
-                self.decimal = representation
+                self.roman: str = Roman.convert_to_roman(representation)
+                self.decimal: int = representation
         else:
             raise RomanNumeralValueError(validation_result)
 
@@ -87,6 +87,8 @@ class Roman:
             return Roman(self.decimal + other)
         elif isinstance(other, str):
             return Roman(self.decimal + Roman(other).decimal)
+        else:
+            raise TypeError(f'Roman numeral addition requires str, int or Roman as right operand, not {type(other)}')
 
     def __radd__(self, other) -> 'Roman':
         """ Implements the right-sided addition for Roman numerals. Without this function, computing 100 + Roman("X")
@@ -101,6 +103,8 @@ class Roman:
             return Roman(self.decimal - other)
         elif isinstance(other, str):
             return Roman(self.decimal - Roman(other).decimal)
+        else:
+            raise TypeError(f'Roman numeral subtraction requires str, int or Roman as right operand, not {type(other)}')
 
     def __mul__(self, other) -> 'Roman':
         """ Implements the left-sided multiplication for Roman numerals """
@@ -110,6 +114,8 @@ class Roman:
             return Roman(self.decimal * other)
         elif isinstance(other, str):
             return Roman(self.decimal * Roman(other).decimal)
+        else:
+            raise TypeError(f'Roman numeral multiplication requires str, int or Roman as right operand, not {type(other)}')
 
     def __rmul__(self, other) -> 'Roman':
         """ Implements the right-sided multiplication for Roman numerals. Without this function, computing
@@ -124,6 +130,8 @@ class Roman:
             return Roman(self.decimal // other)
         elif isinstance(other, str):
             return Roman(self.decimal // Roman(other).decimal)
+        else:
+            raise TypeError(f'Roman numeral division requires str, int or Roman as right operand, not {type(other)}')
 
     def __mod__(self, other) -> 'Roman':
         """ Implements the left-sided modulus operation for Roman numerals """
@@ -133,6 +141,8 @@ class Roman:
             return Roman(self.decimal % other)
         elif isinstance(other, str):
             return Roman(self.decimal % Roman(other).decimal)
+        else:
+            raise TypeError(f'Roman numeral modulus requires str, int or Roman as right operand, not {type(other)}')
 
     ### Comparison operators
     def __lt__(self, other) -> bool:
@@ -143,6 +153,8 @@ class Roman:
             return self.decimal < other
         elif isinstance(other, str):
             return self.decimal < Roman(other).decimal
+        else:
+            raise TypeError(f'Roman numeral less than comparison requires str, int or Roman as right operand, not {type(other)}')
 
     def __le__(self, other) -> bool:
         """ Implements <= comparison between Roman numerals """
@@ -152,44 +164,31 @@ class Roman:
             return self.decimal <= other
         elif isinstance(other, str):
             return self.decimal <= Roman(other).decimal
+        else:
+            raise TypeError(f'Roman numeral less or equal than comparison requires str, int or Roman as right operand, not {type(other)}')
 
     def __gt__(self, other) -> bool:
         """ Implements > comparison between Roman numerals """
-        if isinstance(other, Roman):
-            return self.decimal > other.decimal
-        elif isinstance(other, int):
-            return self.decimal > other
-        elif isinstance(other, str):
-            return self.decimal > Roman(other).decimal
+        return not self <= other
 
     def __ge__(self, other) -> bool:
         """ Implements >= comparison between Roman numerals """
-        if isinstance(other, Roman):
-            return self.decimal >= other.decimal
-        elif isinstance(other, int):
-            return self.decimal >= other
-        elif isinstance(other, str):
-            return self.decimal >= Roman(other).decimal
+        return not self < other
 
     def __eq__(self, other) -> bool:
         """ Implements equality testing between Roman numerals """
-        if isinstance(other, Roman):
-            return self.decimal == other.decimal
-        elif isinstance(other, int):
-            return self.decimal == other
-        elif isinstance(other, str):
-            return self.decimal == Roman(other).decimal
+        return not self < other and not self > other
 
     def __ne__(self, other) -> bool:
         """ Implements inequality testing between Roman numerals """
-        return not self.__eq__(other)
+        return not self == other
 
     def __contains__(self, item) -> bool:
         """ Enables membership testing for the *in* and *not in* operators """
         if isinstance(item, str):
             return item.upper() in self.roman
         else:
-            raise TypeError("'in <Roman>' requires string as left operand, not {}".format(type(item)))
+            raise TypeError(f"'in <Roman>' requires string as left operand, not {type(item)}")
 
     ### Iterator methods
     def __iter__(self) -> 'Roman':
@@ -399,7 +398,7 @@ class Roman:
         await queue.put(None)  # Signal to the consumer that the producer is done
 
     @staticmethod
-    async def consumer(queue: asyncio.Queue) -> None:
+    async def consumer(queue: asyncio.Queue) -> List['Roman']:
         ''' Consume Roman numbers from a queue and print them if they are prime '''
         roman_primes = list(Roman.prime_generator())
         consumed_primes = []
