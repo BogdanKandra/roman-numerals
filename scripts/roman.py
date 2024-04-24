@@ -1,12 +1,12 @@
 import asyncio
 import itertools
-from typing import Callable, Iterator, List, Union
+from typing import Iterator, List, Union
 from scripts.enums import RomanNumeral
 from scripts.exceptions import RomanNumeralValueError, RomanNumeralTypeError
 
 
 ### User-defined decorator function
-def validated(fn: Callable[[Union[int, str]], Union[str, int]]) -> Callable[[Union[int, str]], Union[str, int]]:
+def validated(fn):
     """ Decorator which enables the validation of input for functions taking roman numeral representations as a
     parameter (decimal or string). The typing syntax used here means that <fn> takes a parameter of type Union[int, str]
     and returns a value of type Union[str, int]. The decorator will wrap the function and check if the provided
@@ -34,11 +34,11 @@ class Roman:
         if validation_result == 'OK':
             # Convert it and set fields
             if isinstance(representation, str):
-                self.roman: str = representation.upper()
-                self.decimal: int = Roman.convert_to_decimal(representation)
+                self.roman = representation.upper()
+                self.decimal = Roman.convert_to_decimal(representation)
             elif isinstance(representation, int):
-                self.roman: str = Roman.convert_to_roman(representation)
-                self.decimal: int = representation
+                self.roman = Roman.convert_to_roman(representation)
+                self.decimal = representation
         else:
             raise RomanNumeralValueError(validation_result)
 

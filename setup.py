@@ -1,5 +1,6 @@
 import setuptools
 
+# This represents the text which will be displayed in the PyPI page if the package is uploaded
 with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
@@ -17,7 +18,7 @@ setuptools.setup(
     author=AUTHOR_USER_NAME,
     author_email=AUTHOR_EMAIL,
     description='Converts Roman numerals to integers and vice versa',
-    long_description=long_description,  # This represents the text which will be displayed in the PyPI page if the package is uploaded
+    long_description=long_description,
     long_description_content_type='text/markdown',
     url=f'https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}',
     package_dir={'': SRC_REPO},  # This is the root directory of the package
