@@ -4,4 +4,5 @@
 .vscode/
 __pycache__/
 *.egg-info/
+htmlcov/
 .coverage
