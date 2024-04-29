@@ -12,14 +12,18 @@ This project contains:
 - Implementation of the [Iterator Protocol](https://wiki.python.org/moin/Iterator)
 - Jupyter Notebook which illustrates usage of all Roman class functionality
 - [Unit tests](https://docs.pytest.org/en/7.0.x/) for all functionality in the project
-- Requirements file, holding the runtime dependencies
+- Separate `requirements.txt` and `test-requirements.txt` files, holding the development and testing dependencies
 
 Steps for using the project:
-- Create a virtual environment for the project and activate it: `conda create -n env_name python=3.10`
-- Install the dependencies: `pip install -r requirements.txt`
+- Create a virtual environment for the project: `conda create -n <env_name> python=3.10`
+- Activate the virtual environment: `conda activate <env_name>`
+- Install the development dependencies: `pip install -r requirements.txt`
 - Start Python interpreter, import the Roman class and play with Roman numbers!
+  - Test by first importing the Roman class: `from scripts.roman import Roman`
 
 Steps for testing the project:
+- Create a virtual environment for the project (or activate the one created for the step above)
+- Install the testing dependencies: `pip install -r test-requirements.txt`
 - Run the [pytest](https://docs.pytest.org/en/8.1.x/) test suit from the project base directory: `python -m pytest tests`
   - Compute the test coverage: `coverage run --source=scripts -m pytest -v .\tests\`
   - Visualize the test coverage report (in the CLI): `coverage report -m`
