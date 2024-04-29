@@ -1,7 +1,2 @@
-coverage
-flake8
 ipykernel
-mypy
-pytest==6.2.4
-pytest-asyncio==0.23.6
 -e .
