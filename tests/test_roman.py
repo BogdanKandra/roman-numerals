@@ -1,5 +1,6 @@
 from scripts.exceptions import RomanNumeralTypeError, RomanNumeralValueError
-from scripts.roman import Roman
+from scripts.roman import Roman, validated
+from typing import List
 import asyncio
 import pytest
 
@@ -14,7 +15,8 @@ class TestRoman:
         representation = 'KANDIA'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'The string representation provided contains invalid characters:' in e
+        err_msg = "The string representation provided contains invalid characters:"
+        assert err_msg in str(e.value)
 
     def test_invalid_representation_invalid_subtractive_numerals(self):
         """ Tests that a RomanNumeralValueError is raised when trying to create
@@ -23,7 +25,8 @@ class TestRoman:
         representation = 'LM'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'Only "I", "X" and "C" can be used as subtractive numerals' in e
+        err_msg = 'Only "I", "X" and "C" can be used as subtractive numerals (Used "L")'
+        assert str(e.value) == err_msg
 
     def test_invalid_representation_invalid_repeated_numerals(self):
         """ Tests that a RomanNumeralValueError is raised when trying to create
@@ -32,7 +35,8 @@ class TestRoman:
         representation = 'LLD'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'Only "I", "X", "C" and "M" can be repeated in succession' in e
+        err_msg = 'Only "I", "X", "C" and "M" can be repeated in succession (Repeated "L")'
+        assert str(e.value) == err_msg
 
     def test_invalid_representation_over_repeated_numerals(self):
         """ Tests that a RomanNumeralValueError is raised when trying to create
@@ -41,7 +45,8 @@ class TestRoman:
         representation = 'IIIII'
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'Characters cannot be repeated more than 3 times in one succession' in e
+        err_msg = 'Characters cannot be repeated more than 3 times in one succession (Repeated "I" too many times)'
+        assert str(e.value) == err_msg
 
     def test_invalid_representation_negative_number(self):
         """ Tests that a RomanNumeralValueError is raised when trying to create
@@ -49,7 +54,8 @@ class TestRoman:
         representation = -420
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'Negative Roman numerals do not exist; conversion is impossible' in e
+        err_msg = 'Negative Roman numerals do not exist; conversion is impossible (Provided -420)'
+        assert str(e.value) == err_msg
 
     def test_invalid_representation_too_big(self):
         """ Tests that a RomanNumeralValueError is raised when trying to create
@@ -57,7 +63,8 @@ class TestRoman:
         representation = 7777
         with pytest.raises(RomanNumeralValueError) as e:
             Roman(representation)
-            assert 'The maximum Roman numeral is 3999' in e
+        err_msg = 'The maximum Roman numeral is 3999 (Provided 7777)'
+        assert str(e.value) == err_msg
 
     def test_invalid_representation_type(self):
         """ Tests that a RomanNumeralTypeError is raised when trying to create
@@ -65,7 +72,8 @@ class TestRoman:
         representation = 8.5
         with pytest.raises(RomanNumeralTypeError) as e:
             Roman(representation)
-            assert 'The representation of the Roman numeral must be in str or int format' in e
+        err_msg = "The representation of the Roman numeral must be in str or int format (Given: <class 'float'>)"
+        assert str(e.value) == err_msg
 
     def test_valid_representation_string(self):
         """ Tests that Roman numerals are successfully created from a valid
@@ -172,19 +180,23 @@ class TestRoman:
         r3 = r1 + r2
         assert str(r3) == 'CX (110)'
 
-        r1 = Roman('C')
         r2 = 10
         r3 = r1 + r2
         r4 = r2 + r1
         assert str(r3) == 'CX (110)'
         assert str(r4) == 'CX (110)'
 
-        r1 = Roman('C')
         r2 = 'X'
         r3 = r1 + r2
         r4 = r2 + r1
         assert str(r3) == 'CX (110)'
         assert str(r4) == 'CX (110)'
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r3 = r1 + r2
+        err_msg = "Roman numeral addition requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == err_msg
 
     def test_subtraction(self):
         """ Tests that Roman numerals can be subtracted between them and with
@@ -194,15 +206,19 @@ class TestRoman:
         r3 = r1 - r2
         assert str(r3) == 'XC (90)'
 
-        r1 = Roman('C')
         r2 = 10
         r3 = r1 - r2
         assert str(r3) == 'XC (90)'
 
-        r1 = Roman('C')
         r2 = 'X'
         r3 = r1 - r2
         assert str(r3) == 'XC (90)'
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r3 = r1 - r2
+        err_msg = "Roman numeral subtraction requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == err_msg
 
     def test_multiplication(self):
         """ Tests that Roman numerals can be multiplied between them and with
@@ -212,19 +228,23 @@ class TestRoman:
         r3 = r1 * r2
         assert str(r3) == 'M (1000)'
 
-        r1 = Roman('C')
         r2 = 10
         r3 = r1 * r2
         r4 = r2 * r1
         assert str(r3) == 'M (1000)'
         assert str(r4) == 'M (1000)'
 
-        r1 = Roman('C')
         r2 = 'X'
         r3 = r1 * r2
         r4 = r2 * r1
         assert str(r3) == 'M (1000)'
         assert str(r4) == 'M (1000)'
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r3 = r1 * r2
+        err_msg = "Roman numeral multiplication requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == err_msg
 
     def test_division(self):
         """ Tests that Roman numerals can be divided between them and with
@@ -234,15 +254,19 @@ class TestRoman:
         r3 = r1 // r2
         assert str(r3) == 'X (10)'
 
-        r1 = Roman('C')
         r2 = 10
         r3 = r1 // r2
         assert str(r3) == 'X (10)'
 
-        r1 = Roman('C')
         r2 = 'X'
         r3 = r1 // r2
         assert str(r3) == 'X (10)'
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r3 = r1 // r2
+        err_msg = "Roman numeral division requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == err_msg
 
     def test_modulus(self):
         """ Tests that Roman numerals can be divided with modulus between them
@@ -252,15 +276,19 @@ class TestRoman:
         r3 = r1 % r2
         assert str(r3) == 'N (0)'
 
-        r1 = Roman('C')
         r2 = 10
         r3 = r1 % r2
         assert str(r3) == 'N (0)'
 
-        r1 = Roman('C')
         r2 = 'X'
         r3 = r1 % r2
         assert str(r3) == 'N (0)'
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r3 = r1 % r2
+        err_msg = "Roman numeral modulus requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == err_msg
 
     ### Tests for the comparison operators
     def test_less_than(self):
@@ -270,11 +298,9 @@ class TestRoman:
         r2 = Roman(10)
         assert not r1 < r2
 
-        r1 = Roman('C')
         r2 = 10
         assert not r1 < r2
 
-        r1 = Roman('C')
         r2 = 'X'
         assert not r1 < r2
 
@@ -282,13 +308,17 @@ class TestRoman:
         r2 = Roman(3999)
         assert r1 < r2
 
-        r1 = Roman('N')
         r2 = 3999
         assert r1 < r2
 
-        r1 = Roman('N')
         r2 = 'MMMCMXCIX'
         assert r1 < r2
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r1 < r2
+        msg = "Roman numeral less than comparison requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == msg
 
     def test_less_equal(self):
         """ Tests that Roman numerals can be "<=" compared between them and
@@ -297,11 +327,9 @@ class TestRoman:
         r2 = Roman(10)
         assert not r1 <= r2
 
-        r1 = Roman('C')
         r2 = 10
         assert not r1 <= r2
 
-        r1 = Roman('C')
         r2 = 'X'
         assert not r1 <= r2
 
@@ -309,13 +337,17 @@ class TestRoman:
         r2 = Roman(0)
         assert r1 <= r2
 
-        r1 = Roman('N')
         r2 = 0
         assert r1 <= r2
 
-        r1 = Roman('N')
         r2 = 'N'
         assert r1 <= r2
+
+        r2 = [15]
+        with pytest.raises(TypeError) as e:
+            r1 <= r2
+        msg = "Roman numeral less or equal than comparison requires str, int or Roman as right operand, not <class 'list'>"
+        assert str(e.value) == msg
 
     def test_greater_than(self):
         """ Tests that Roman numerals can be ">" compared between them and
@@ -435,7 +467,8 @@ class TestRoman:
 
         with pytest.raises(TypeError) as e:
             2 in r
-            assert "'in <Roman>' requires string as left operand, not" in e
+        err_msg = "'in <Roman>' requires string as left operand, not <class 'int'>"
+        assert str(e.value) == err_msg
 
     ### Tests for the iterator and generator methods
     def test_iterator_protocol(self):
@@ -464,6 +497,11 @@ class TestRoman:
         roman_iterator = iter(roman_numeral)
 
         assert roman_iterator is iter(roman_iterator)
+
+    def test_roman_generator(self):
+        expected_numbers = [Roman(i) for i in range(4000)]
+
+        assert list(Roman.roman_generator()) == expected_numbers
 
     def test_fibonacci_generator(self):
         """ Tests that the fibonacci_generator function generates the expected values """
@@ -571,6 +609,29 @@ class TestRoman:
             decimals.append(Roman.convert_to_decimal(r))
 
         assert decimals == list(range(4000))
+
+    ### Decorator test
+    def test_invalid_decorator_use(self):
+        """ Tests that the *validated* decorator raises the appropriate exception if incorrectly applied """
+        with pytest.raises(RomanNumeralTypeError) as e:
+            @validated
+            def test(l: List[int]):
+                print(l)
+
+            test([1, 2, 3])
+
+        err_msg = "The representation of the Roman numeral must be in str or int format (Given: <class 'list'>)"
+        assert str(e.value) == err_msg
+
+        with pytest.raises(RomanNumeralValueError) as e:
+            @validated
+            def test(s: str):
+                print(s)
+
+            test('XXXX')
+
+        err_msg = 'Characters cannot be repeated more than 3 times in one succession (Repeated "X" too many times)'
+        assert str(e.value) == err_msg
 
     ### Tests for the coroutines
     @pytest.mark.asyncio
