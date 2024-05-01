@@ -33,7 +33,7 @@ Roman numerals convertor, a small project illustrating advanced Python concepts
 - Run the [pytest](https://docs.pytest.org/en/8.1.x/) test suit from the project base directory: `python -m pytest tests`
   - Compute the test coverage: `coverage run --source=scripts -m pytest -v .\tests\`
   - Visualize the test coverage report (in the CLI): `coverage report -m`
-  - Visualize the test coverage report (in the web browser): `coverage html` -> Then open the index.html file
+  - Visualize the test coverage report (in the web browser): `coverage html` -> Then open the `index.html` file from the newly generated `htmlcov` directory
 - Run the [flake8](https://flake8.pycqa.org/en/latest/) linting tool from the project base directory: `flake8`
   - [Configure flake8](https://flake8.pycqa.org/en/latest/user/configuration.html) by editing the `.flake8` file
 - Run the [mypy](https://mypy.readthedocs.io/en/stable/) static type checker from the project base directory: `mypy`
