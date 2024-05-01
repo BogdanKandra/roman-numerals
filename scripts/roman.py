@@ -357,6 +357,12 @@ class Roman:
 
     ### User-defined Generators
     @staticmethod
+    def roman_generator() -> Iterator['Roman']:
+        """ Generator function which generates the Roman numerals from 1 to 3999 """
+        for i in range(4000):
+            yield Roman(i)
+
+    @staticmethod
     def fibonacci_generator() -> Iterator['Roman']:
         """ Generator function which generates the Roman Fibonacci numbers """
         a, b = Roman(1), Roman(1)
