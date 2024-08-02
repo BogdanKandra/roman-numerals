@@ -9,7 +9,7 @@ REPO_NAME = 'roman-numerals'
 VERSION = '0.0.0'
 AUTHOR_USER_NAME = 'BogdanKandra'
 AUTHOR_EMAIL = 'bogdan.kandra@gmail.com'
-SRC_REPO = 'scripts'
+SRC_DIR = 'scripts'
 
 
 setuptools.setup(
@@ -21,6 +21,6 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url=f'https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}',
-    package_dir={'': SRC_REPO},  # This is the root directory of the package
-    packages=setuptools.find_packages(where=SRC_REPO)
+    package_dir={'': SRC_DIR},  # This is the root directory of the package
+    packages=setuptools.find_packages(where=SRC_DIR),
 )
